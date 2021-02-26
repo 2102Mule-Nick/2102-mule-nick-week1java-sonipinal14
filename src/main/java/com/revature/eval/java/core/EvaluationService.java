@@ -1,6 +1,8 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +32,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		char letter;
+		String acron = "";
+		for (int i=0; i<phrase.length(); i++) {
+			letter = phrase.charAt(i);
+			//System.out.println(letter);
+			if(i == 0) {
+				acron = acron + Character.toUpperCase(phrase.charAt(i));
+				//System.out.println(acron);
+			}
+			if(letter == ' ' || letter == '-') {
+				acron = acron + Character.toUpperCase(phrase.charAt(i+1));
+				
+			}
+		}		
+		return acron;
 	}
 
 	/**
@@ -85,20 +100,30 @@ public class EvaluationService {
 
 		public boolean isEquilateral() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo && sideTwo == sideThree && sideOne == sideThree){
+			    return true;
+			} else
+			    return false;
 		}
 
 		public boolean isIsosceles() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo || sideTwo == sideThree || sideOne == sideThree){
+			    return true;
+			} else
+			    return false;
 		}
 
 		public boolean isScalene() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne != sideTwo && sideTwo != sideThree && sideOne != sideThree){
+			    return true;
+			} else
+			    return false;
+		}
 		}
 
-	}
+	
 
 	/**
 	 * 4. Given a word, compute the scrabble score for that word.
@@ -116,8 +141,81 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int points = 0;
+		
+		for(int i=0; i < string.length(); i++) {
+			char letter = string.charAt(i);
+			switch(letter) {
+				case 'a':
+				case 'A':
+				case 'e':
+				case 'E':
+				case 'i':
+				case 'I':
+				case 'o':
+				case 'O':
+				case 'u':
+				case 'U':
+				case 'l':
+				case 'L':
+				case 'n':
+				case 'N':
+				case 'r':
+				case 'R':
+				case 's':
+				case 'S':
+				case 't':
+				case 'T':
+					points += 1;
+					break;
+				case 'd':
+				case 'D':
+				case 'g':
+				case 'G':
+					points += 2;
+					break;
+				case 'b':
+				case 'B':
+				case 'c':
+				case 'C':
+				case 'm':
+				case 'M':
+				case 'p':
+				case 'P':
+					points += 3;
+					break;
+				case 'f':
+				case 'F':
+				case 'h':
+				case 'H':
+				case 'v':
+				case 'V':
+				case 'w':
+				case 'W':
+				case 'y':
+				case 'Y':
+					points += 4;
+					break;
+				case 'k':
+				case 'K':
+					points += 5;
+					break;
+				case 'j':
+				case 'J':
+				case 'x':
+				case 'X':
+					points += 8;
+					break;
+				case 'q':
+				case 'Q':
+				case 'z':
+				case 'Z':
+					points += 10;
+					break;
+			}
+		}
+		
+		return points;
 	}
 
 	/**
@@ -167,7 +265,28 @@ public class EvaluationService {
 	 */
 	public Map<String, Integer> wordCount(String string) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		//split the string into an array using regex
+				//here space @&.=?$-+, will be used to split the string
+				String [] tokens = string.split("[\\s@&.=?,$+-]+");
+		                // prints the count of the total number of words
+		                 System.out.println("Total words: "+tokens.length);
+				//a map to store the words and its count
+				Map<String,Integer> hashMap = new HashMap<>();
+				//iterate through the string array for count
+				for (String word : tokens) {
+					int count = 0;
+					//iterate through  the array for checking
+					//compare words to check for equality
+					for (String sameword : tokens) {
+						if(word.equals(sameword)) {
+							count++;
+						}
+						//add the word to the map
+						hashMap.put(word,count);	
+					}
+				}
+				return hashMap;
+		
 	}
 
 	/**
@@ -205,12 +324,23 @@ public class EvaluationService {
 	 * binary search is a dichotomic divide and conquer search algorithm.
 	 * 
 	 */
-	static class BinarySearch<T> {
+	static class BinarySearch<T extends Comparable<T>> {
 		private List<T> sortedList;
-
+		
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+			 int low = 0, high = sortedList.size() - 1, middle;
+	            while (low <= high) {
+	            	middle = (low + high) / 2;
+	                  if (sortedList.get(middle).compareTo(t) == 0) {
+	                        return middle;
+	                  }
+	                  else if (sortedList.get(middle).compareTo(t) < 0) {
+	                        low = middle + 1;
+	                  } else {
+	                        high = middle - 1;
+	                  }
+	            }
+	            return -1;
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -246,8 +376,38 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String lowerCaseWord =string.toLowerCase();
+        int po = -1; // Position of first vowel
+        char ch;
+
+        // This for loop finds the index of the first vowel in the word
+        for (int i = 0; i < lowerCaseWord.length(); i++) {
+            ch = lowerCaseWord.charAt(i);
+
+            if (isVowel(ch)) {
+                po = i;
+                break;
+            }
+        }
+
+        if (po == 0) {
+            // Translating word if the first character is a vowel (Rule 1)
+            return lowerCaseWord + "ay"; // Adding "ay" to the end of string (can also be "way" or just "ayy")
+        } else {
+            // Translating word if the first character(s) are consonants (Rule 1 and 2)
+            String a = lowerCaseWord.substring(po); // Extracting all characters in the word beginning from the 1st vowel
+            String b = lowerCaseWord.substring(0, po); // Extracting all characters located before the first vowel
+            return a + b + "ay"; // Adding "ay" at the end of the extracted words after joining them.
+        }
+    }
+
+    // This method checks if the character passed is a vowel (the letter "y" is counted as a vowel in this context)
+    public static Boolean isVowel(char ch) {
+        if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' || ch == 'y') {
+        	return true;
+        }
+        return false;
+      
 	}
 
 	/**
@@ -267,8 +427,22 @@ public class EvaluationService {
 	 */
 	public boolean isArmstrongNumber(int input) {
 		// TODO Write an implementation for this method declaration
+		int result = 0;
+        int orig = input;
+        while(input != 0){
+            int remainder = input%10;
+            result = result + remainder*remainder*remainder;
+            input = input/10;
+        }
+        //number is Armstrong return true
+        if(orig == result){
+            return true;
+        }
 		return false;
-	}
+      
+       
+    } 
+	
 
 	/**
 	 * 10. Compute the prime factors of a given natural number.
@@ -282,7 +456,18 @@ public class EvaluationService {
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		List<Long> primefactors = new ArrayList<>();
+        long copyOfInput =l;
+
+        for (int i = 2; i <= copyOfInput; i++) {
+            if (copyOfInput % i == 0) {
+                primefactors.add((long) i); // prime factor
+                copyOfInput /= i;
+                i--;
+            }
+        }
+        
+        return primefactors;
 	}
 
 	/**
@@ -338,9 +523,24 @@ public class EvaluationService {
 	 * @param i
 	 * @return
 	 */
-	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	public int calculateNthPrime(int n) {
+		int prime=1, count=0,i;
+		  
+	    while (count < n){
+	      prime=prime+1;
+	      for ( i = 2; i <= prime; i++){
+	        if (prime % i == 0) {
+	          break;
+	        }
+	      }
+	      if ( i == prime){
+	        count = count+1;
+	      }
+	    }
+	   
+		return prime;
+		
+		
 	}
 
 	/**
@@ -447,8 +647,10 @@ public class EvaluationService {
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
 		// TODO Write an implementation for this method declaration
+		// return given.plus(1_000_000_000, ChronoUnit.SECONDS);
 		return null;
 	}
+	
 
 	/**
 	 * 18. Given a number, find the sum of all the unique multiples of particular
@@ -463,10 +665,33 @@ public class EvaluationService {
 	 * @param set
 	 * @return
 	 */
-	public int getSumOfMultiples(int i, int[] set) {
+	public int getSumOfMultiples(int number, int[] set) {
 		// TODO Write an implementation for this method declaration
-		return 0;
-	}
+		//for understanding
+		/*long sum = 0;
+		for (int i = 1; i < n; i++) {
+			if (i % 3 == 0 || i % 5 == 0) {
+				sum += i;
+				}
+		}
+		return sum;*/
+		int sum = 0;
+
+        for (int i = 0; i < number; i++) {
+            Boolean isMultiple = false;
+
+            for (int aSet : set) {
+                isMultiple |= i % aSet == 0;
+            }
+
+            if (isMultiple) {
+                sum += i;
+            }
+        }
+
+        return sum;
+    }
+	
 
 	/**
 	 * 19. Given a number determine whether or not it is valid per the Luhn formula.
